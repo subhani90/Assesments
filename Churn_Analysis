@@ -185,8 +185,6 @@ grid.arrange(p13, p14, p15, p16, p17, ncol=2)
 
 //Data Modelling
 
-library(caret)
-
 intrain <- createDataPartition(churn$Churn, p = 0.7, list = FALSE)
 set.seed(2018)
 training <- churn[intrain, ]  //70% fro training data
@@ -198,24 +196,6 @@ dim(training); dim(testing)
 str(training)
 str(testing)
 
-testing$Churn <- as.character(testing$Churn)
-testing$Churn[testing$Churn == "No"] <- "0"
-testing$Churn[testing$Churn == "Yes"] <- "1"
-
-tree <- ctree(Churn ~ Contract+tenure_group+PaperlessBilling, training)
-plot(tree)
-
-pred_tree <- predict(tree, testing)
-print("Confusion Matrix for Decision Tree"); table(Predicted = pred_tree, Actual = testing$Churn)
-
-p1 <- predict(tree, training)
-tab1 <- table(Predicted = p1, Actual = training$Churn)
-tab2 <- table(Predicted = pred_tree, Actual = testing$Churn)
-print(paste('Decision Tree Accuracy',sum(diag(tab2))/sum(tab2)))
-plot
-library(dplyr)
-install.packages('caTools')
-library(caTools)
 install.packages('rpart')
 library(rpart)
 
@@ -224,18 +204,15 @@ rpart(Churn~.,data=training)->mod_class
 predict(mod_class,testing,type="class") -> result_class
 table(testing$Churn,result_class)
 
+(1441+107)/(1441+107+349+211)
 
-> rpart(Churn~.,data=training)->mod_class
-> predict(mod_class,testing,type="class") -> result_class
-> table(testing$Churn,result_class)
- //  result class
-  //    No  Yes
-  // 0 1441  107
- //  1  349  211
 
-// (1441+107)/(1441+107+349+211)
-// [1] 0.7343454
+install.packages('caret')
+library(caret)
+install.packages('e1071',dependencies=TRUE)
 
-//Accuracy of the model is 73%
+confusionMatrix(table(testing$Churn,result_class))
+
+
 
 
