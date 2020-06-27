@@ -1,34 +1,4 @@
----
-title: "Customer Churn Analysis"
-output: html_document
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-
-
-
+-title: "Customer Churn Analysis"
 //install libraries
 install.packages('plyr')
 library(plyr)
@@ -59,13 +29,8 @@ sapply(churn, function(x) sum(is.na(x)))
 
 churn <- churn[complete.cases(churn), ]
 
-
-
-
-
 dim(churn)
 unique(churn['OnlineSecurity'])
-
 
 library(plyr)
 
@@ -74,7 +39,6 @@ cols_recode1 <- c(10:15)
 for (i in 1:ncol(churn[, cols_recode1])) {
       churn[, cols_recode1][, i] <- as.factor(mapvalues(churn[, cols_recode1][, i], from = c("No internet service"), to = c("No")))
 }
-
 
 churn$MultipleLines <- as.factor(mapvalues(churn$MultipleLines, 
                                            from=c("No phone service"),
@@ -95,7 +59,6 @@ group_tenure <- function(tenure){
         return('> 60 Month')
     }
 }
-
 churn$tenure_group <- sapply(churn$tenure,group_tenure)
 churn$tenure_group <- as.factor(churn$tenure_group)
 str(churn)
@@ -128,19 +91,20 @@ str(churn)
 library(ggplot2)
 
 p1 <- ggplot(churn, aes(x=gender)) + ggtitle("Gender") + xlab("Gender") +
-      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5) +
+      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5, fill="#E69F00") +
       ylab("Percentage") + coord_flip() + theme_minimal()
 
 
 p2 <- ggplot(churn, aes(x=SeniorCitizen)) + ggtitle("Senior Citizen") + 
       xlab("Senior Citizen") + geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5) + ylab("Percentage") + coord_flip() + theme_minimal()
+      
 
 p3 <- ggplot(churn, aes(x=Partner)) + ggtitle("Partner") + xlab("Partner") + 
-      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5) + 
+      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5, color="blue", fill="steelblue") + 
       ylab("Percentage") + coord_flip() + theme_minimal()
 
 p4 <- ggplot(churn, aes(x=Dependents)) + ggtitle("Dependents") + xlab("Dependents") + 
-      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5) + 
+      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5,fill="#56B4E9") + 
       ylab("Percentage") + coord_flip() + theme_minimal()    
       
 library(gridExtra)   
@@ -148,71 +112,71 @@ grid.arrange(p1, p2, p3, p4, ncol=2)
 
 p5 <- ggplot(churn, aes(x=PhoneService)) + ggtitle("Phone Service") + 
       xlab("Phone Service") + 
-      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5) + 
+      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5,fill="#E69F00") + 
       ylab("Percentage") + coord_flip() + theme_minimal()
 
 p6 <- ggplot(churn, aes(x=MultipleLines)) + ggtitle("Multiple Lines") + 
       xlab("Multiple Lines") + 
-      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5) + 
+      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5, fill="#FF9999") + 
       ylab("Percentage") + coord_flip() + theme_minimal()
 
 p7 <- ggplot(churn, aes(x=InternetService)) + ggtitle("Internet Service") + 
       xlab("Internet Service") + 
-      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5) + 
+      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5,fill="#F0E442") + 
       ylab("Percentage") + coord_flip() + theme_minimal()
 
 p8 <- ggplot(churn, aes(x=OnlineSecurity)) + ggtitle("Online Security") + 
       xlab("Online Security") + 
-      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5) + 
+      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5,fill="#009E73") + 
       ylab("Percentage") + coord_flip() + theme_minimal()
 
 grid.arrange(p5, p6, p7, p8, ncol=2)
 
 p9 <- ggplot(churn, aes(x=OnlineBackup)) + ggtitle("Online Backup") + 
       xlab("Online Backup") + 
-      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5) + 
+      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5, fill="#E69F00") + 
       ylab("Percentage") + coord_flip() + theme_minimal()
 
 p10 <- ggplot(churn, aes(x=DeviceProtection)) + ggtitle("Device Protection") + 
       xlab("Device Protection") + 
-      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5) + 
+      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5, fill="#F0E442") + 
       ylab("Percentage") + coord_flip() + theme_minimal()
 
 p11 <- ggplot(churn, aes(x=TechSupport)) + ggtitle("Tech Support") + 
       xlab("Tech Support") + 
-      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5) + 
+      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5, fill="#0072B2") + 
       ylab("Percentage") + coord_flip() + theme_minimal()
 
 p12 <- ggplot(churn, aes(x=StreamingTV)) + ggtitle("Streaming TV") + 
       xlab("Streaming TV") + 
-      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5) + 
+      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5, fill="#D55E00") + 
       ylab("Percentage") + coord_flip() + theme_minimal()
 
 grid.arrange(p9, p10, p11, p12, ncol=2)
 
 p13 <- ggplot(churn, aes(x=StreamingMovies)) + ggtitle("Streaming Movies") + 
       xlab("Streaming Movies") + 
-      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5) + 
+      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5, fill="#D55E00") + 
       ylab("Percentage") + coord_flip() + theme_minimal()
 
 p14 <- ggplot(churn, aes(x=Contract)) + ggtitle("Contract") + 
       xlab("Contract") + 
-      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5) + 
+      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5, fill="#CC79A7") + 
       ylab("Percentage") + coord_flip() + theme_minimal()
 
 p15 <- ggplot(churn, aes(x=PaperlessBilling)) + ggtitle("Paperless Billing") + 
       xlab("Paperless Billing") + 
-      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5) + 
+      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5, fill="#009E73") + 
       ylab("Percentage") + coord_flip() + theme_minimal()
 
 p16 <- ggplot(churn, aes(x=PaymentMethod)) + ggtitle("Payment Method") + 
       xlab("Payment Method") + 
-      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5) + 
+      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5,fill="#0072B2") + 
       ylab("Percentage") + coord_flip() + theme_minimal()
 
 p17 <- ggplot(churn, aes(x=tenure_group)) + ggtitle("Tenure Group") + 
       xlab("Tenure Group") + 
-      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5) + 
+      geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5,fill="#E69F00") + 
       ylab("Percentage") + coord_flip() + theme_minimal()
 
 grid.arrange(p13, p14, p15, p16, p17, ncol=2)
@@ -248,7 +212,7 @@ p1 <- predict(tree, training)
 tab1 <- table(Predicted = p1, Actual = training$Churn)
 tab2 <- table(Predicted = pred_tree, Actual = testing$Churn)
 print(paste('Decision Tree Accuracy',sum(diag(tab2))/sum(tab2)))
-
+plot
 library(dplyr)
 install.packages('caTools')
 library(caTools)
@@ -259,3 +223,19 @@ rpart(Churn~.,data=training)->mod_class
 
 predict(mod_class,testing,type="class") -> result_class
 table(testing$Churn,result_class)
+
+
+> rpart(Churn~.,data=training)->mod_class
+> predict(mod_class,testing,type="class") -> result_class
+> table(testing$Churn,result_class)
+ //  result class
+  //    No  Yes
+  // 0 1441  107
+ //  1  349  211
+
+// (1441+107)/(1441+107+349+211)
+// [1] 0.7343454
+
+//Accuracy of the model is 73%
+
+
